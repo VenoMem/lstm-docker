@@ -8,7 +8,10 @@ import numpy as np
 
 
 def get_weather_data(start_date, end_date, conn, headers):
-    conn.request("GET", f"/history?startDateTime={start_date.strftime('%Y-%m-%d')}T00%3A00%3A00&aggregateHours=1&location=Washington%2CDC%2CUSA&endDateTime={end_date.strftime('%Y-%m-%d')}T00%3A00%3A00&unitGroup=us&dayStartTime=00%3A00%3A00&contentType=csv&dayEndTime=23%3A00%3A00&shortColumnNames=0", headers=headers)
+    conn.request("GET", 
+                 f"/history?startDateTime={start_date.strftime('%Y-%m-%d')}T00%3A00%3A00&aggregateHours=1&location=Washington%2CDC%2CUSA&endDateTime={end_date.strftime('%Y-%m-%d')}T00%3A00%3A00&unitGroup=us&dayStartTime=00%3A00%3A00&contentType=csv&dayEndTime=23%3A00%3A00&shortColumnNames=0", 
+                 headers=headers)
+    
     res = conn.getresponse()
     data = res.read()
     return data.decode("utf-8").split('\n')[1:-1]
@@ -31,7 +34,6 @@ def creata_weather_dataframe(start_date):
 
     current_date = start_date
     while current_date < end_date:
-        # Przesuń bieżącą datę o 15 dni do przodu
         current_date += timedelta(days=15)
 
         text = get_weather_data(start_date, current_date, conn, headers)
@@ -57,7 +59,7 @@ def set_index_as_datetime(dataframe):
 
 
 
-def create_working_dataframe():
+def create_working_dataframe(start_date = datetime(2015, 1, 1)):
     # Catalogue path
     dir = './'
 
@@ -78,20 +80,20 @@ def create_working_dataframe():
 
         df_new_temp = set_index_as_datetime(df_new_temp)
 
-        # Tworzenie maski logicznej dla drugiego DataFrame
+        # Mask for non exisitng records
         mask = ~df_new_temp.index.isin(df_temp_from_file.index)
 
-        # Filtrowanie drugiego DataFrame na podstawie maski
+        # Getting new entries
         new_entries = df_new_temp[mask]
 
-        # Doklejanie tylko wybranych wierszy drugiego DataFrame do pierwszego DataFrame
+        # Adding new entries
         df = pd.concat([df_temp_from_file, new_entries])
 
         
     else:
         print(f"Plik {file_path} nie istnieje w katalogu.")
 
-        df = creata_weather_dataframe(datetime(2015, 1, 1))
+        df = creata_weather_dataframe(start_date)
         df = set_index_as_datetime(df)
         
     df.to_csv('./dane.csv', mode = 'w')
