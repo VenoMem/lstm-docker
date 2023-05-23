@@ -22,10 +22,8 @@ def df_to_X_y(df, window_size=20):
 
 
 def create_sets(df, window_size=20):
-    # Utworzenie tensorów
     X, y = df_to_X_y(df, window_size)
 
-    # Podział zbiorów na treningowy, walidacyjny i treningowy
     train_amount = int(len(df)*0.8)
     val_amount = int(len(df)*0.9)
 
@@ -44,11 +42,9 @@ def create_model(x_train, y_train, x_val, y_val, window_size=20, epochs=10, alph
     model.add(Dense(8, 'relu'))
     model.add(Dense(1, 'linear'))
 
-
     cp1 = ModelCheckpoint('model/', save_best_only=True, verbose=0)
     model.compile(loss=MeanSquaredError(), optimizer=Adam(learning_rate=alpha), metrics=[RootMeanSquaredError()])
 
-    # Trenowanie modelu
     model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=epochs, callbacks=[cp1], verbose=False)
 
 

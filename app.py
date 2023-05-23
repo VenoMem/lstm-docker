@@ -85,7 +85,6 @@ def user_request():
                 set_global_df(create_working_dataframe())
                 X_train, y_train, X_val, y_val, X_test, y_test = lstm.create_sets(global_df, global_window_size)
                 set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test)
-                #lstm.create_model(X_train, y_train, X_val, y_val, window_size=global_window_size)
                 lstm.create_model(global_X_train, global_y_train, global_X_val, global_y_val, window_size=global_window_size)
                 model = lstm.load_best_model()
                 y_pred = model.predict(global_X_test, verbose=0).flatten()
@@ -104,12 +103,10 @@ def user_request():
                 
 
         elif command == 'statistics':
-            if 'hours' in data:
-                #set_global_hours(int(data['hours']))
-                model = lstm.load_best_model()
-                y_pred = model.predict(global_X_test, verbose=0).flatten()
-                stats = show_model_statistics(global_y_test, y_pred)
-                return stats
+            model = lstm.load_best_model()
+            y_pred = model.predict(global_X_test, verbose=0).flatten()
+            stats = show_model_statistics(global_y_test, y_pred)
+            return stats
                 
         else:
             print("Unknown command")
@@ -117,12 +114,13 @@ def user_request():
     return "Processed successfully"
 
 
-if __name__ == "__main__":
 
+
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080, debug=True)
 
     while True:
-        time.sleep(3600)  # Sleep for an hour
+        time.sleep(3600)
 
         set_global_df(create_working_dataframe())
         X_train, y_train, X_val, y_val, X_test, y_test = lstm.create_sets(global_df, global_window_size)
