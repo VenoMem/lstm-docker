@@ -33,18 +33,22 @@ def show_model_statistics(y_true, y_pred):
 
 
 
+# Building model during container initialization
 global_window_size = 20
 global_hours = 24
+
 global_df = create_working_dataframe()
 global_X_train, global_y_train, global_X_val, global_y_val, global_X_test, global_y_test = lstm.create_sets(global_df, global_window_size)
 lstm.create_model(global_X_train, global_y_train, global_X_val, global_y_val, window_size=global_window_size)
+
 model = lstm.load_best_model()
 y_pred = model.predict(global_X_test, verbose=0).flatten()
-stats = show_model_statistics(global_y_test, y_pred)
-print(stats)
-pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
-print(pred)
 
+stats = show_model_statistics(global_y_test, y_pred)
+pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
+
+print(stats)
+print(pred)
 
 
 
@@ -70,6 +74,8 @@ def set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test):
     global_y_test = y_test
 
 
+
+
 app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
@@ -85,9 +91,11 @@ def user_request():
                 set_global_df(create_working_dataframe())
                 X_train, y_train, X_val, y_val, X_test, y_test = lstm.create_sets(global_df, global_window_size)
                 set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test)
+                
                 lstm.create_model(global_X_train, global_y_train, global_X_val, global_y_val, window_size=global_window_size)
                 model = lstm.load_best_model()
                 y_pred = model.predict(global_X_test, verbose=0).flatten()
+                
                 stats = show_model_statistics(global_y_test, y_pred)
                 pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
                 return stats + pred
@@ -96,8 +104,10 @@ def user_request():
         elif command == 'predict':
             if 'hours' in data:
                 set_global_hours(int(data['hours']))
+                
                 model = lstm.load_best_model()
                 y_pred = model.predict(global_X_test, verbose=0).flatten()
+                
                 pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
                 return pred
                 
@@ -105,13 +115,14 @@ def user_request():
         elif command == 'statistics':
             model = lstm.load_best_model()
             y_pred = model.predict(global_X_test, verbose=0).flatten()
+            
             stats = show_model_statistics(global_y_test, y_pred)
             return stats
                 
         else:
-            print("Unknown command")
+            return("ERRORL: Unknown command.")
 
-    return "Processed successfully"
+    return "ERROR: Invalid request."
 
 
 
@@ -126,4 +137,3 @@ if __name__ == "__main__":
         X_train, y_train, X_val, y_val, X_test, y_test = lstm.create_sets(global_df, global_window_size)
         set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test)
         lstm.create_model(global_X_train, global_y_train, global_X_val, global_y_val, window_size=global_window_size)
-        
