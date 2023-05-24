@@ -22,9 +22,9 @@ def show_predicted_temperature(df, model, window_size, hours):
 
     # return string
 
-    data = { '0':{ 'string': f'Ostatnia data: {df.index[-1]}', 'value': float(df.iloc[-1,0]) }}
+    data = { 'last_known_temp':{ 'string': f'Ostatnia data: {df.index[-1]}', 'value': float(df.iloc[-1,0]) }, 'predictions':[]}
     for i, val in enumerate(predicted_temp):
-        data[f'{i+1}'] = { 'string': f'Temperatura dla godziny T0+{i+1}H', 'value': float(round(val,1)) }
+        data['predictions'].append({ 'string': f'Temperatura dla godziny T0+{i+1}H', 'value': float(round(val,1)) })
 
     return json.dumps(data, indent=4)
 
@@ -34,7 +34,7 @@ def show_model_statistics(y_true, y_pred):
     rmse = math.sqrt(mean_squared_error(y_true, y_pred))
     mape = mean_absolute_percentage_error(y_true, y_pred)
 
-    return f"Statystyki modelu\nR^2:\t{round(r2, 3)}\nRMSE:\t{round(rmse, 3)}\nMAPE:\t{round(mape, 3)}"
+    return json.dumps({'r2': r2, 'rmse':rmse, 'mape': mape}, indent=4)
 
 
 
@@ -104,7 +104,12 @@ def user_request():
                 
                 stats = show_model_statistics(global_y_test, y_pred)
                 pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
-                return stats + pred
+                
+                data = {}
+                data.update(json.loads(stats))
+                data.update(json.loads(pred))
+
+                return json.dumps(data, indent=4)
                 
         
         elif command == 'predict':
