@@ -5,7 +5,7 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_percenta
 import numpy as np
 import time
 from flask import Flask, request
-
+import json
 
 
 def show_predicted_temperature(df, model, window_size, hours):
@@ -16,11 +16,17 @@ def show_predicted_temperature(df, model, window_size, hours):
         predicted_temp.append(predicted_val[0])
         latest_window = np.append(latest_window, predicted_val)[1:]
         
-    string = f'\nOstatnia data: {df.index[-1]}\n'
-    for i, val in enumerate(predicted_temp):
-        string += f'Temperatura dla godziny T0+{i+1}H: {val:.1f}\n'
+    # string = f'\nOstatnia data: {df.index[-1]}\n'
+    # for i, val in enumerate(predicted_temp):
+    #     string += f'Temperatura dla godziny T0+{i+1}H: {val:.1f}\n'
 
-    return string
+    # return string
+
+    data = { '0':{ 'string': f'Ostatnia data: {df.index[-1]}', 'value': float(df.iloc[-1,0]) }}
+    for i, val in enumerate(predicted_temp):
+        data[f'{i+1}'] = { 'string': f'Temperatura dla godziny T0+{i+1}H', 'value': float(round(val,1)) }
+
+    return json.dumps(data, indent=4)
 
 
 def show_model_statistics(y_true, y_pred):
