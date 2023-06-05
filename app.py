@@ -4,7 +4,7 @@ import math
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_percentage_error
 import numpy as np
 import time
-from flask import Flask, request
+from flask import Flask, request, render_template
 import json
 
 
@@ -133,7 +133,8 @@ def user_request():
         else:
             return("ERRORL: Unknown command.")
 
-    return "ERROR: Invalid request."
+    # return "ERROR: Invalid request."
+    return render_template('form.html')
 
 
 
