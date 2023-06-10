@@ -39,7 +39,7 @@ function dataExchange(jsonData = {}, method="GET") {
 
 function visualizations() {
 
-    var streamData = document.getElementById('stream-data').value;
+    // var streamData = document.getElementById('stream-data').value;
 
     var scheduleOption = document.getElementById("schedule").value;
     let jsonMetrics = {"r2": 0.85, "rmse": 0.12, "mape": 0.08};
@@ -49,7 +49,7 @@ function visualizations() {
     if (scheduleOption === "hourly") {
         jsonMetrics = {"r5": 0.85, "mksmclms": 0.12, "mape": 0.08};
         console.log(scheduleOption)
-        refreshInterval = setInterval(dataExchange, 3600000); // 3600000 milisekund = 1 godzina
+        refreshInterval = setInterval(visualizations, 3600000); // 3600000 milisekund = 1 godzina
     } else{
         stopRefresh();
     }
