@@ -21,8 +21,10 @@ def user_request():
             # Obsługa komendy "pred_stats"
             #show_model_statistics(y_test, y_pred)
             return "Komenda 'pred_stats' została wykonana."
+        else:
+            return("ERRORL: Unknown command.")
 
-    return render_template('form.html')
+    return render_template('templates/form.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

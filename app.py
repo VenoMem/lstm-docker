@@ -6,7 +6,7 @@ import numpy as np
 import time
 from flask import Flask, request, render_template
 import json
-
+from flask_cors import CORS
 
 def show_predicted_temperature(df, model, window_size, hours):
     predicted_temp = []
@@ -83,10 +83,13 @@ def set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test):
 
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/', methods=['POST'])
 def user_request():
     data = request.form.to_dict()
+
+
 
     if 'command' in data and len(data['command']) > 0:
         command = data['command']
@@ -134,13 +137,14 @@ def user_request():
             return("ERRORL: Unknown command.")
 
     # return "ERROR: Invalid request."
-    return render_template('form.html')
+    return render_template('public/templates/form.html')
 
 
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    # app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080)
 
     while True:
         time.sleep(3600)
