@@ -7,6 +7,9 @@ import time
 from flask import Flask, request, render_template
 import json
 from flask_cors import CORS
+import os
+
+template_dir = os.path.abspath('../public/templates')
 
 def show_predicted_temperature(df, model, window_size, hours):
     predicted_temp = []
@@ -82,7 +85,7 @@ def set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test):
 
 
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder=template_dir)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/', methods=['POST'])
@@ -112,7 +115,8 @@ def user_request():
                 data.update(json.loads(stats))
                 data.update(json.loads(pred))
 
-                return json.dumps(data, indent=4)
+                return render_template('form.html', data=json.dumps(data, indent=4))
+
                 
         
         elif command == 'predict':
@@ -123,7 +127,7 @@ def user_request():
                 y_pred = model.predict(global_X_test, verbose=0).flatten()
                 
                 pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
-                return pred
+                return render_template('form.html', data=pred)
                 
 
         elif command == 'statistics':
@@ -131,13 +135,13 @@ def user_request():
             y_pred = model.predict(global_X_test, verbose=0).flatten()
             
             stats = show_model_statistics(global_y_test, y_pred)
-            return stats
+            return render_template('form.html', data=stats)
                 
         else:
             return("ERRORL: Unknown command.")
 
     # return "ERROR: Invalid request."
-    return render_template('public/templates/form.html')
+    return render_template('form.html')
 
 
 

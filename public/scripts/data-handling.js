@@ -43,7 +43,7 @@ function visualizations() {
 
     var scheduleOption = document.getElementById("schedule").value;
     let jsonMetrics = {"r2": 0.85, "rmse": 0.12, "mape": 0.08};
-    jsonMetrics = dataExchange();
+    // jsonMetrics = dataExchange();
     jsonMetrics = {"r23343k": 0.85, "mksmclms": 0.12, "mape": 0.08};
 
     if (scheduleOption === "hourly") {
