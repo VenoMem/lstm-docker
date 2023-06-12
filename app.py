@@ -8,8 +8,8 @@ from flask import Flask, request, render_template
 import json
 from flask_cors import CORS
 import os
-
-template_dir = os.path.abspath('../public/templates')
+import matplotlib.pyplot as plt
+template_dir = os.path.abspath('./public/templates')
 
 def show_predicted_temperature(df, model, window_size, hours):
     predicted_temp = []
@@ -88,10 +88,22 @@ def set_global_sets(X_train, y_train, X_val, y_val, X_test, y_test):
 app = Flask(__name__,template_folder=template_dir)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET','POST'])
 def user_request():
-    data = request.form.to_dict()
+    # data = request.form.to_dict()
+    if request.method == 'GET':
+        model = lstm.load_best_model()
+        y_pred = model.predict(global_X_test, verbose=0).flatten()
 
+        pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
+        stats = show_model_statistics(global_y_test, y_pred)
+
+        fig = plt.figure(figsize=(6, 6))
+        plt.plot(list(range(global_hours)), pred)
+        image_path = "./public/static/plot.png"
+        plt.savefig(image_path)
+        plt.close()
+        return render_template('form.html', image_filename="plot.png")
 
 
     if 'command' in data and len(data['command']) > 0:
@@ -140,15 +152,15 @@ def user_request():
         else:
             return("ERRORL: Unknown command.")
 
-    # return "ERROR: Invalid request."
-    return render_template('form.html')
+    return "ERROR: Invalid request."
+    # return render_template('form.html')
 
 
 
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0', port=8080, debug=True)
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=5000)
 
     while True:
         time.sleep(3600)

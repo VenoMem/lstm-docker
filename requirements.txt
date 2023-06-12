@@ -4,3 +4,4 @@ tensorflow
 scikit-learn
 Flask
 flask-cors
+matplotlib

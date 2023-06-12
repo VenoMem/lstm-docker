@@ -18,7 +18,7 @@
                 <option value="hourly">Co godzinę</option>
 
             </select>
-
+            <div> {{ image_filename }}</div>
             <label for="command">Komenda:</label>
             <select name="command" id="command">
                 <option value="learn">Learn</option>
@@ -27,10 +27,10 @@
             </select>
             <br>
         </div>
-         <div class="form-group">
-                <label for="time-interval">Time Interval (in seconds):</label>
-                <input type="number" id="time-interval" placeholder="Enter time interval" required/>
-            </div>
+<!--         <div class="form-group">-->
+<!--                <label for="time-interval">Time Interval (in seconds):</label>-->
+<!--                <input type="number" id="time-interval" placeholder="Enter time interval" required/>-->
+<!--            </div>-->
         <div class="form-group">
             <button onclick="visualizations()" type="button">Wyświetl wyniki</button>
         </div>

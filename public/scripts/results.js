@@ -46,9 +46,7 @@ function plottingChart(metrics, type) {
     var chartContainer = document.getElementById('chart-container');
     var previousChartCanvas = document.getElementById(type);
 
-
     // var metrics = JSON.parse(metrics);
-
 
     console.log(Object.keys(metrics), Object.values(metrics))
     chartGenerator(type, metrics)
