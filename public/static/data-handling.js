@@ -38,43 +38,48 @@ function dataExchange(jsonData = {}, method="GET") {
  * **/
 
 function visualizations() {
+    var resultDiv = document.getElementById('result');
+    var pred = resultDiv.dataset.pred;
+    var hours = resultDiv.dataset.hours;
+    var stats = resultDiv.dataset.stats;
 
-    // var streamData = document.getElementById('stream-data').value;
+    let pred_from_hours = {
+        "hours":hours,
+        "pred": pred
+    }
+    console.log(stats, pred_from_hours)
+
+    var selectElement = document.getElementById('command');
+    var resultElement = document.getElementById('result');
+
 
     var scheduleOption = document.getElementById("schedule").value;
-    let jsonMetrics = {"r2": 0.85, "rmse": 0.12, "mape": 0.08};
-    // jsonMetrics = dataExchange();
-    jsonMetrics = {"r23343k": 0.85, "mksmclms": 0.12, "mape": 0.08};
 
     if (scheduleOption === "hourly") {
-        jsonMetrics = {"r5": 0.85, "mksmclms": 0.12, "mape": 0.08};
+
         console.log(scheduleOption)
         refreshInterval = setInterval(visualizations, 3600000); // 3600000 milisekund = 1 godzina
     } else{
         stopRefresh();
     }
 
-    //TODO : getting data  for predictions
-    let data= [{
-      x: -10,
-      y: 0
-    }, {
-      x: 0,
-      y: 10
-    }, {
-      x: 10,
-      y: 5
-    }, {
-      x: 0.5,
-      y: 5.5
-    }];
+    selectElement.addEventListener('change', function() {
+    var selectedOption = selectElement.value;
+    if (selectedOption == 'learn'){
+            resultElement.textContent = 'Metryki: ' + JSON.stringify(stats, null, 2);
+            clearingChartSpace();
 
+    }
+    else{
+        clearingChartSpace()
+    plottingChart(pred_from_hours, 'line');
+    }
 
-    clearingChartSpace()
-    plottingChart(jsonMetrics, 'line');
-    plottingChart(data, 'scatter');
-    plottingChart(jsonMetrics, 'bar');
-    actualizeMetrics(jsonMetrics);
+  });
+
+    // plottingChart(data, 'scatter');
+    // plottingChart(jsonMetrics, 'bar');
+    // actualizeMetrics(JSON.parse(stats));
 
 
 }
@@ -83,7 +88,7 @@ function stopRefresh() {
     clearInterval(refreshInterval);
 }
 
-// document.getElementById("schedule").addEventListener("change", visualizations);
+
 
 
 

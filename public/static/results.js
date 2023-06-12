@@ -11,13 +11,15 @@ function chartGenerator(type, metrics) {
     let chartContainer = document.getElementById('chart-container')
     var barChartCanvas = document.createElement("canvas");
 
+    var hours = JSON.parse(metrics.hours);
+    var pred = JSON.parse(metrics.pred);
     var barChart = new Chart(barChartCanvas, {
         type: type,
         data: {
-            labels: Object.keys(metrics),
+            labels: hours,
             datasets: [{
-                label: 'Metryki',
-                data: Object.values(metrics),
+                label: "Predictions",
+                data: pred,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -42,17 +44,11 @@ function chartGenerator(type, metrics) {
 
 function plottingChart(metrics, type) {
 
-
     var chartContainer = document.getElementById('chart-container');
     var previousChartCanvas = document.getElementById(type);
 
-    // var metrics = JSON.parse(metrics);
-
     console.log(Object.keys(metrics), Object.values(metrics))
     chartGenerator(type, metrics)
-
-
-
 
 }
 

@@ -18,38 +18,37 @@
                 <option value="hourly">Co godzinę</option>
 
             </select>
-            <div> {{ image_filename.r2 }}</div>
-            <div> {{ image_filename.rmse }}</div>
-            <div> {{ image_filename.mape }}</div>
+
             <label for="command">Komenda:</label>
             <select name="command" id="command">
-                <option value="learn">Learn</option>
+                <option value="learn" selected>Learn</option>
                 <option value="predict">Predict</option>
-<!--                <option value="pred_stats">Pred Stats</option>-->
+                <!--                <option value="pred_stats">Pred Stats</option>-->
             </select>
+
+
             <br>
         </div>
-<!--         <div class="form-group">-->
-<!--                <label for="time-interval">Time Interval (in seconds):</label>-->
-<!--                <input type="number" id="time-interval" placeholder="Enter time interval" required/>-->
-<!--            </div>-->
+
         <div class="form-group">
             <button onclick="visualizations()" type="button">Wyświetl wyniki</button>
         </div>
     </div>
 
 
-    </form>
+</form>
 
-    <div class="results">
-        <div id="results-container"></div>
+<div class="results">
+    <div id="results-container"></div>
 
-        <div id="chart-container"></div>
+    <div id="chart-container"></div>
+    <div id="result" data-pred="{{ pred }}" data-hours="{{ hours }}" data-stats="{{ stats }}"></div>
 
-    </div>
 
-    <script src="../static/results.js"></script>
-    <script src="../static/data-handling.js"></script>
+</div>
+
+<script src="../static/results.js"></script>
+<script src="../static/data-handling.js"></script>
 
 </body>
 </html>

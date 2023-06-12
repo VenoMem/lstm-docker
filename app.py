@@ -94,24 +94,26 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/', methods=['GET', 'POST'])
 def user_request():
+    command = request.form.get('command')
+
     if request.method == 'GET':
         model = lstm.load_best_model()
         y_pred = model.predict(global_X_test, verbose=0).flatten()
 
         pred = show_predicted_temperature(global_df, model, global_window_size, global_hours)
         stats = show_model_statistics(global_y_test, y_pred)
+        stats_decoded = json.loads(stats)
 
-        plt.title('Wykres predykcji w zależności od czasu')
+        # plt.title('Wykres predykcji w zależności od czasu')
 
-        fig = plt.figure(figsize=(6, 6))
-        plt.plot(list(range(global_hours)), pred)
+        # fig = plt.figure(figsize=(6, 6))
+        global_hours_list = list(range(global_hours))
+        # plt.plot(list(range(global_hours)), pred)
         # image_path = "./public/static/plot.png"
-        plt.savefig(static_dir)
+        # plt.savefig(static_dir)
         # plt.close()
 
-        return render_template('form.html', image_filename=stats)
-
-
+        return render_template('form.html', stats=stats_decoded, command=command, pred=pred, hours=global_hours_list)
 
 
     else:
