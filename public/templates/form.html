@@ -3,7 +3,7 @@
 <head>
     <title>Formularz</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="../styles/form.css">
+    <link rel="stylesheet" href="../static/form.css">
 
 </head>
 <body>
@@ -18,12 +18,14 @@
                 <option value="hourly">Co godzinę</option>
 
             </select>
-            <div> {{ image_filename }}</div>
+            <div> {{ image_filename.r2 }}</div>
+            <div> {{ image_filename.rmse }}</div>
+            <div> {{ image_filename.mape }}</div>
             <label for="command">Komenda:</label>
             <select name="command" id="command">
                 <option value="learn">Learn</option>
                 <option value="predict">Predict</option>
-                <option value="pred_stats">Pred Stats</option>
+<!--                <option value="pred_stats">Pred Stats</option>-->
             </select>
             <br>
         </div>
@@ -46,8 +48,8 @@
 
     </div>
 
-    <script src="../scripts/results.js"></script>
-    <script src="../scripts/data-handling.js"></script>
+    <script src="../static/results.js"></script>
+    <script src="../static/data-handling.js"></script>
 
 </body>
 </html>
