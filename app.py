@@ -47,7 +47,7 @@ def show_model_statistics(y_true, y_pred):
 
 # Building model during container initialization
 global_window_size = 20
-global_hours = 24
+global_hours = 168
 
 global_df = create_working_dataframe()
 global_X_train, global_y_train, global_X_val, global_y_val, global_X_test, global_y_test = lstm.create_sets(global_df,
@@ -172,7 +172,7 @@ def user_request():
 
 if __name__ == "__main__":
     start = time.time()
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
     print(time.time() - start)
 
     while True:

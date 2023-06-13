@@ -4,18 +4,19 @@ var refreshInterval;
 /** Czyszczenie danych po załadowaniu nowego formsa **/
 function clearingChartSpace() {
 
-     let chartContainer = document.getElementById('chart-container')
+    let chartContainer = document.getElementById('chart-container')
     chartContainer.innerHTML = '';
 
 
     var container = document.getElementById("results-container");
     container.innerHTML = "";
 }
+
 /**
  * Wymiana danych front-backend
  * **/
 
-function dataExchange(jsonData = {}, method="GET") {
+function dataExchange(jsonData = {}, method = "GET") {
 
     var xhr = new XMLHttpRequest();
     xhr.open(method, "/", true);
@@ -44,7 +45,7 @@ function visualizations() {
     var stats = resultDiv.dataset.stats;
 
     let pred_from_hours = {
-        "hours":hours,
+        "hours": hours,
         "pred": pred
     }
     console.log(stats, pred_from_hours)
@@ -59,27 +60,30 @@ function visualizations() {
 
         console.log(scheduleOption)
         refreshInterval = setInterval(visualizations, 3600000); // 3600000 milisekund = 1 godzina
-    } else{
+    } else {
         stopRefresh();
     }
 
-    selectElement.addEventListener('change', function() {
-    var selectedOption = selectElement.value;
-    if (selectedOption == 'learn'){
+    selectElement.addEventListener('change', function () {
+        var selectedOption = selectElement.value;
+        if (selectedOption == 'learn') {
             resultElement.textContent = 'Metryki: ' + JSON.stringify(stats, null, 2);
-            clearingChartSpace();
+            // clearingChartSpace();
 
-    }
-    else{
-        clearingChartSpace()
-    plottingChart(pred_from_hours, 'line');
-    }
+        } else {
+            clearingChartSpace()
+            // plottingChart(pred_from_hours, 'line');
 
-  });
+            var start = document.getElementById("start-input").value;
+            var end = document.getElementById("end-input").value;
+            chartGenerator('line', pred_from_hours, start, end);
+        }
+
+    });
 
     // plottingChart(data, 'scatter');
     // plottingChart(jsonMetrics, 'bar');
-    // actualizeMetrics(JSON.parse(stats));
+    
 
 
 }

@@ -7,19 +7,31 @@
  * **/
 
 
-function chartGenerator(type, metrics) {
+function chartGenerator(type, metrics, start, end) {
     let chartContainer = document.getElementById('chart-container')
     var barChartCanvas = document.createElement("canvas");
 
+
     var hours = JSON.parse(metrics.hours);
     var pred = JSON.parse(metrics.pred);
+
+    // Filtruj etykiety czasowe i dane predykcyjne w zależności od podanego zakresu czasowego
+    var filteredHours = [];
+    var filteredPred = [];
+    for (var i = 0; i < hours.length; i++) {
+        if (hours[i] >= start && hours[i] <= end) {
+            filteredHours.push(hours[i]);
+            filteredPred.push(pred[i]);
+        }
+    }
+
     var barChart = new Chart(barChartCanvas, {
         type: type,
         data: {
-            labels: hours,
+            labels: filteredHours,
             datasets: [{
                 label: "Predictions",
-                data: pred,
+                data: filteredPred,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
